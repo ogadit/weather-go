@@ -1,6 +1,3 @@
-# This workflow will build a golang project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
-
 name: Go
 
 on:
@@ -21,8 +18,42 @@ jobs:
       with:
         go-version: '1.21.5'
 
-    - name: Build
-      run: go build -v ./...
+    - name: Build for Linux
+      run: GOOS=linux GOARCH=amd64 go build -o weather-linux ./...
 
     - name: Test
       run: go test -v ./...
+
+    - name: Package Linux Release
+      run: tar -czvf weather-linux.tar.gz weather-linux
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.21.5'
+
+    - name: Build for Windows
+      run: go build -o weather.exe ./...
+
+    - name: Test
+      run: go test -v ./...
+
+    - name: Package Windows Release
+      run: Compress-Archive -Path .\weather.exe -DestinationPath weather-windows.zip
+
+  deploy:
+    needs: [build, build-windows]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Upload Releases
+      uses: actions/upload-artifact@v2
+      with:
+        name: weather-releases
+        path: |
+          weather-linux.tar.gz
+          weather-windows.zip
