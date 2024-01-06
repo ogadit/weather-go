@@ -15,7 +15,9 @@ func main() {
 
 	fmt.Printf(
 		"Weather for %s\n"+
-			"Current Temperature: %.1f°C\n",
+			"Current Temperature:\t%.1f°C\n"+
+			"Feels Like:\t\t%.1f°C\n",
 		parsedData.Location.Name+", "+parsedData.Location.Country,
-		parsedData.Current.Temp)
+		parsedData.Current.Temp,
+		parsedData.Current.FeelsLike)
 }

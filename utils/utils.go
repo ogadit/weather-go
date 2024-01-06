@@ -18,7 +18,8 @@ type weatherData struct {
 		Country string `json:"country"`
 	} `json:"location"`
 	Current struct {
-		Temp float64 `json:"temp_c"`
+		Temp      float64 `json:"temp_c"`
+		FeelsLike float64 `json:"feelslike_c"`
 	} `json:"current"`
 }
 
